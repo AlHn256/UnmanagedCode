@@ -38,7 +38,7 @@ namespace CopyDel
             Absolute = 0x8000
         };
 
-        public TestClick()=>InitializeComponent();
+        public TestClick() => InitializeComponent();
 
         private int SCREENX = -1;
         private int SCREENY = -1;
@@ -72,22 +72,26 @@ namespace CopyDel
 
         public class Window
         {
-            public int LeftPoint {  get; set; } = -1;
-            public int RightPoint {  get; set; } = -1;
-            public int Up {  get; set; } = -1;
+            public int LeftPoint { get; set; } = -1;
+            public int RightPoint { get; set; } = -1;
+            public int Up { get; set; } = -1;
             public int Dn { get; set; } = -1;
             public int GetX() => (RightPoint + LeftPoint) / 2;
             public int GetY() => (Up + Dn) / 2;
-            public bool Check() => LeftPoint > 0 && RightPoint > 0 && Up > 0 && Dn > 0 && Up<Dn && LeftPoint<RightPoint;
+            public bool Check() => LeftPoint > 0 && RightPoint > 0 && Up > 0 && Dn > 0 && Up < Dn && LeftPoint < RightPoint;
         }
 
         public RawColor WindowColor = new RawColor(31);
-
+        private void TestBtn2_Click(object sender, EventArgs e)
+        {
+            FindWindow();
+        }
         private void FindWindow()
         {
             GetRezolution();
             picBox.Image = null;
-            RTB.Text = null;
+            picBox.BackColor = Color.Black;
+            //RTB.Text = null;
             string text = string.Empty;
             IntPtr desktopPtr = GetDesktopWindow();
             IntPtr hdc = GetDC(desktopPtr);
@@ -95,15 +99,126 @@ namespace CopyDel
             Window window = new Window();
             window.LeftPoint = FindLeftPoint(hdc);
             window.RightPoint = FindRightPoint(hdc);
-            int X = (window.LeftPoint + window.RightPoint)/ 2;
+            int X = (window.LeftPoint + window.RightPoint) / 2;
 
             window.Up = FindUpPoint(hdc, X);
             window.Dn = FindDnPoint(hdc, X);
             var check = window.Check();
 
             ReleaseDC(desktopPtr, hdc);
+            List<int> ints = new List<int>();
+            ints.Add(window.LeftPoint);
+            ints.Add(window.RightPoint);
+            ints.Add(window.Up);
+            ints.Add(window.Dn);
         }
 
+        private int LeftPoint = 96;
+        private int RightPoint = 249;
+        private int Up = 7;
+        private int Dn = 1069;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Scaner scaner = new Scaner(LeftPoint, RightPoint, Up, Dn);
+            var rawColor = scaner.GetLine(EnumDirection.Dn);
+            if (rawColor.Count != 0)
+            {
+                Bitmap myBitmap = new Bitmap(picBox.Width, picBox.Height, PixelFormat.Format32bppArgb);
+                int to = rawColor.Count > picBox.Height ? picBox.Height - 1 : rawColor.Count;
+                for (int i = 0; i < to; i++)
+                {
+                    myBitmap.SetPixel(picBox.Width/2 - 1, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
+                    myBitmap.SetPixel(picBox.Width/2, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
+                    myBitmap.SetPixel(picBox.Width/2 + 1, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
+                }
+
+                picBox.Image = myBitmap;
+            }
+        }
+
+        public class Scaner
+        {
+            public int LeftPoint { get; set; } = -1;
+            public int RightPoint { get; set; } = -1;
+            public int Up { get; set; } = -1;
+            public int Dn { get; set; } = -1;
+
+            public Scaner(int leftPoint, int rightPoint, int up, int dn)
+            {
+                LeftPoint = leftPoint;
+                RightPoint = rightPoint;
+                Up = up;
+                Dn = dn;
+            }
+
+            public Scaner()
+            {
+                LeftPoint = 0;
+                RightPoint = GetSystemMetrics(0);
+                Up = 0;
+                Dn = GetSystemMetrics(1);
+            }
+
+            public void ChangeArea(int leftPoint, int rightPoint, int up, int dn)
+            {
+                LeftPoint = leftPoint;
+                RightPoint = rightPoint;
+                Up = up;
+                Dn = dn;
+            }
+            public void ChangeArea()
+            {
+                LeftPoint = 0;
+                RightPoint = GetSystemMetrics(0);
+                Up = 0;
+                Dn = GetSystemMetrics(1);
+            }
+
+            public int GetX() => (RightPoint + LeftPoint) / 2;
+            public int GetY() => (Up + Dn) / 2;
+
+            public bool Check() => LeftPoint > 0 && RightPoint > 0 && Up > 0 && Dn > 0 && Up < Dn && LeftPoint < RightPoint;
+            public List<RawColor> GetLine(EnumDirection Direction)
+            {
+                if (!Check()) return new List<RawColor>();
+                if (Direction == EnumDirection.Dn)
+                {
+                    int X = GetX();
+                    return GetLine(X, Up, X, Dn);
+                }
+                else return new List<RawColor>();
+            }
+            public List<RawColor> GetLine(int fx, int fy, int tx, int ty)
+            {
+                List<RawColor> rawList = new List<RawColor>();
+                IntPtr desktopPtr = GetDesktopWindow();
+                IntPtr hdc = GetDC(desktopPtr);
+                if (fx == tx)
+                {
+                    for (int Y = fy; Y < ty; Y++)
+                    {
+                        uint pixel = GetPixel(hdc, fx, Y);
+                        rawList.Add(new RawColor((byte)(pixel & 0x000000FF), (byte)((pixel & 0x0000FF00) >> 8), (byte)((pixel & 0x00FF0000) >> 16)));
+                    }
+                }
+                else
+                {
+
+                }
+
+                return rawList;
+            }
+        }
+
+        public enum EnumDirection
+        {
+            Und,
+            Lt,
+            Rt,
+            Up,
+            Dn
+        }
         private int FindDnPoint(IntPtr hdc, int X)
         {
             //string text = string.Empty;
@@ -240,22 +355,22 @@ namespace CopyDel
 
         private int FindLeftPoint(IntPtr hdc)
         {
-            //string text = string.Empty;
+            string text = string.Empty;
             RawColorList.Clear();
             int Width = SCREENX / 2 + 1, Height = SCREENY / 2 + 1;
-            //Bitmap myBitmap = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
+            Bitmap myBitmap = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
 
             int Y = SCREENY / 2, q = 0, findCounter = 0, point = 0;
             bool isFind = false;
 
-            for (int X = 50; X < SCREENX / 8; X++)
+            for (int X = 50; X < SCREENX / 4; X++)
             {
                 uint pixel = GetPixel(hdc, X, Y);
                 RawColor rawColor = new RawColor((byte)(pixel & 0x000000FF), (byte)((pixel & 0x0000FF00) >> 8), (byte)((pixel & 0x00FF0000) >> 16));
 
-                //myBitmap.SetPixel(q, Height / 2 - 1, Color.FromArgb(250, rawColor.R, rawColor.G, rawColor.B));
-                //myBitmap.SetPixel(q, Height / 2, Color.FromArgb(250, rawColor.R, rawColor.G, rawColor.B));
-                //myBitmap.SetPixel(q, Height / 2 + 1, Color.FromArgb(250, rawColor.R, rawColor.G, rawColor.B));
+                myBitmap.SetPixel(q, Height / 2 - 1, Color.FromArgb(250, rawColor.R, rawColor.G, rawColor.B));
+                myBitmap.SetPixel(q, Height / 2, Color.FromArgb(250, rawColor.R, rawColor.G, rawColor.B));
+                myBitmap.SetPixel(q, Height / 2 + 1, Color.FromArgb(250, rawColor.R, rawColor.G, rawColor.B));
                 RawColorList.Add(new RawColor(rawColor.R, rawColor.G, rawColor.B));
                 q++;
 
@@ -274,14 +389,9 @@ namespace CopyDel
 
             //RawColorList.Select(x => text += x.ToString() + "\n").ToArray();
             //RTB.Text = text;
-            //picBox.Image = myBitmap;
-            //ReleaseDC(desktopPtr, hdc);
+            picBox.Image = myBitmap;
+           
             return point;
-        }
-
-        private void TestBtn2_Click(object sender, EventArgs e)
-        {
-            FindWindow();
         }
         public struct RawColor
         {
