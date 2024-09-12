@@ -5,11 +5,24 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-
+//https://habr.com/ru/articles/316012/
 namespace CopyDel
 {
     public partial class TestClick : Form
     {
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetWindowRect(IntPtr hWnd, ref Rect rect);
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Rect
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
         [DllImport("User32.dll")]
         static extern int GetSystemMetrics(int nIndex);
         [DllImport("User32.dll")]
@@ -37,6 +50,19 @@ namespace CopyDel
             WHEEL = 0x0800, HWHEEL = 0x01000,
             Absolute = 0x8000
         };
+        public enum EnumDirection
+        {
+            Und,
+            Lt,
+            Rt,
+            Up,
+            Dn
+        }
+        public enum CaptureMode
+        {
+            Screen,
+            Window
+        }
 
         public TestClick() => InitializeComponent();
 
@@ -99,10 +125,14 @@ namespace CopyDel
             Window window = new Window();
             window.LeftPoint = FindLeftPoint(hdc);
             window.RightPoint = FindRightPoint(hdc);
-            int X = (window.LeftPoint + window.RightPoint) / 2;
 
-            window.Up = FindUpPoint(hdc, X);
-            window.Dn = FindDnPoint(hdc, X);
+
+            int X = (window.LeftPoint + window.RightPoint) / 2;
+            if (X > 0)
+            {
+                window.Up = FindUpPoint(hdc, X);
+                window.Dn = FindDnPoint(hdc, X);
+            }
             var check = window.Check();
 
             ReleaseDC(desktopPtr, hdc);
@@ -124,6 +154,8 @@ namespace CopyDel
             var rawColor = scaner.GetLine(EnumDirection.Dn);
             if (rawColor.Count != 0)
             {
+               
+
                 Bitmap myBitmap = new Bitmap(picBox.Width, picBox.Height, PixelFormat.Format32bppArgb);
                 int to = rawColor.Count > picBox.Height ? picBox.Height - 1 : rawColor.Count;
                 for (int i = 0; i < to; i++)
@@ -135,7 +167,9 @@ namespace CopyDel
 
                 picBox.Image = myBitmap;
             }
+            else picBox.Image = scaner.RezultBitMap;
         }
+
 
         public class Scaner
         {
@@ -143,6 +177,7 @@ namespace CopyDel
             public int RightPoint { get; set; } = -1;
             public int Up { get; set; } = -1;
             public int Dn { get; set; } = -1;
+            public Bitmap RezultBitMap { get; set; } 
 
             public Scaner(int leftPoint, int rightPoint, int up, int dn)
             {
@@ -159,7 +194,6 @@ namespace CopyDel
                 Up = 0;
                 Dn = GetSystemMetrics(1);
             }
-
             public void ChangeArea(int leftPoint, int rightPoint, int up, int dn)
             {
                 LeftPoint = leftPoint;
@@ -191,33 +225,85 @@ namespace CopyDel
             }
             public List<RawColor> GetLine(int fx, int fy, int tx, int ty)
             {
-                List<RawColor> rawList = new List<RawColor>();
-                IntPtr desktopPtr = GetDesktopWindow();
-                IntPtr hdc = GetDC(desktopPtr);
-                if (fx == tx)
+                List<RawColor> RawList = new List<RawColor>();
+                if (true)
                 {
-                    for (int Y = fy; Y < ty; Y++)
+                    ScreenCapturer screenCapturer = new ScreenCapturer();
+                    var sdf = screenCapturer.Capture(CaptureMode.Screen);
+                    if (sdf != null)
                     {
-                        uint pixel = GetPixel(hdc, fx, Y);
-                        rawList.Add(new RawColor((byte)(pixel & 0x000000FF), (byte)((pixel & 0x0000FF00) >> 8), (byte)((pixel & 0x00FF0000) >> 16)));
+                        Rectangle section = new Rectangle(new Point(0, 0), new Size(sdf.Width / 4, sdf.Height / 4));
+                        RezultBitMap =  CropImage(sdf, section);
                     }
                 }
                 else
                 {
+                    IntPtr desktopPtr = GetDesktopWindow();
+                    IntPtr hdc = GetDC(desktopPtr);
+                    if (fx == tx)
+                    {
+                        for (int Y = fy; Y < ty; Y++)
+                        {
+                            uint pixel = GetPixel(hdc, fx, Y);
+                            RawList.Add(new RawColor((byte)(pixel & 0x000000FF), (byte)((pixel & 0x0000FF00) >> 8), (byte)((pixel & 0x00FF0000) >> 16)));
+                        }
+                    }
+                    else
+                    {
 
+                    }
                 }
 
-                return rawList;
+                return RawList;
+            }
+
+            public Bitmap CropImage(Bitmap source, Rectangle section)
+            {
+                var bitmap = new Bitmap(section.Width, section.Height);
+                using (var g = Graphics.FromImage(bitmap))
+                {
+                    g.DrawImage(source, 0, 0, section, GraphicsUnit.Pixel);
+                    return bitmap;
+                }
             }
         }
 
-        public enum EnumDirection
+        class ScreenCapturer
         {
-            Und,
-            Lt,
-            Rt,
-            Up,
-            Dn
+            public Bitmap Capture(CaptureMode screenCaptureMode = CaptureMode.Window)
+            {
+                Rectangle bounds;
+
+                if (screenCaptureMode == CaptureMode.Screen)
+                {
+                    bounds = Screen.GetBounds(Point.Empty);
+                    CursorPosition = Cursor.Position;
+                }
+                else
+                {
+                    var handle = GetForegroundWindow();
+                    var rect = new Rect();
+                    GetWindowRect(handle, ref rect);
+
+                    bounds = new Rectangle(rect.Left, rect.Top, rect.Right, rect.Bottom);
+                    //CursorPosition = new Point(Cursor.Position.X - rect.Left, Cursor.Position.Y - rect.Top);
+                }
+
+                var result = new Bitmap(bounds.Width, bounds.Height);
+
+                using (var g = Graphics.FromImage(result))
+                {
+                    g.CopyFromScreen(new Point(bounds.Left, bounds.Top), Point.Empty, bounds.Size);
+                }
+
+                return result;
+            }
+
+            public Point CursorPosition
+            {
+                get;
+                protected set;
+            }
         }
         private int FindDnPoint(IntPtr hdc, int X)
         {

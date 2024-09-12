@@ -42,7 +42,8 @@ namespace CopyDel
             // 
             // TestBtn1
             // 
-            this.TestBtn1.Location = new System.Drawing.Point(383, 10);
+            this.TestBtn1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.TestBtn1.Location = new System.Drawing.Point(811, 10);
             this.TestBtn1.Name = "TestBtn1";
             this.TestBtn1.Size = new System.Drawing.Size(82, 23);
             this.TestBtn1.TabIndex = 31;
@@ -75,9 +76,9 @@ namespace CopyDel
             this.picBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.picBox.Location = new System.Drawing.Point(11, 54);
+            this.picBox.Location = new System.Drawing.Point(11, 39);
             this.picBox.Name = "picBox";
-            this.picBox.Size = new System.Drawing.Size(455, 995);
+            this.picBox.Size = new System.Drawing.Size(883, 1010);
             this.picBox.TabIndex = 44;
             this.picBox.TabStop = false;
             // 
@@ -95,7 +96,7 @@ namespace CopyDel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(477, 1061);
+            this.ClientSize = new System.Drawing.Size(905, 1061);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.picBox);
             this.Controls.Add(this.ChkBox);
