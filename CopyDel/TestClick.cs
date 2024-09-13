@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CopyDel.Enum;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -37,32 +38,6 @@ namespace CopyDel
         public static extern int ReleaseDC(IntPtr hwnd, IntPtr hdc);
         [DllImport("gdi32.dll")]
         public static extern uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
-
-        //для удобства использования создаем перечисление с необходимыми флагами (константами), которые определяют действия мыши: 
-        [Flags]
-        enum MouseFlags
-        {
-            Move = 0x0001,
-            LeftDown = 0x0002, LeftUp = 0x0004,
-            MIDDLEDOWN = 0x0020, MIDDLEUP = 0x0040,
-            RightDown = 0x0008, RightUp = 0x0010,
-            XDOWN = 0x0080, XUP = 0x0100,
-            WHEEL = 0x0800, HWHEEL = 0x01000,
-            Absolute = 0x8000
-        };
-        public enum EnumDirection
-        {
-            Und,
-            Lt,
-            Rt,
-            Up,
-            Dn
-        }
-        public enum CaptureMode
-        {
-            Screen,
-            Window
-        }
 
         public TestClick() => InitializeComponent();
 
@@ -154,30 +129,51 @@ namespace CopyDel
             var rawColor = scaner.GetLine(EnumDirection.Dn);
             if (rawColor.Count != 0)
             {
-               
-
                 Bitmap myBitmap = new Bitmap(picBox.Width, picBox.Height, PixelFormat.Format32bppArgb);
                 int to = rawColor.Count > picBox.Height ? picBox.Height - 1 : rawColor.Count;
                 for (int i = 0; i < to; i++)
                 {
-                    myBitmap.SetPixel(picBox.Width/2 - 1, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
-                    myBitmap.SetPixel(picBox.Width/2, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
-                    myBitmap.SetPixel(picBox.Width/2 + 1, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
+                    myBitmap.SetPixel(picBox.Width / 2 - 1, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
+                    myBitmap.SetPixel(picBox.Width / 2, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
+                    myBitmap.SetPixel(picBox.Width / 2 + 1, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
                 }
-
                 picBox.Image = myBitmap;
             }
-            else picBox.Image = scaner.RezultBitMap;
+            else
+            {
+                // picBox.Image = scaner.RezultBitMap;
+                var img = scaner.RezultBitMap;
+                picBox.BackColor = Color.White;
+                Bitmap myBitmap = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
+                for (int i = 0; i < img.Height - 1; i++)
+                {
+                    Color color = img.GetPixel(img.Height / 2, i);
+                    myBitmap.SetPixel(picBox.Width / 2 - 1, i, Color.FromArgb(color.A, color.R, color.G, color.B));
+                    myBitmap.SetPixel(picBox.Width / 2, i, Color.FromArgb(250, color.R, color.G, color.B));
+                    myBitmap.SetPixel(picBox.Width / 2 + 1, i, Color.FromArgb(250, color.R, color.G, color.B));
+                }
+                picBox.Image = myBitmap;
+            }
         }
-
-
         public class Scaner
         {
             public int LeftPoint { get; set; } = -1;
             public int RightPoint { get; set; } = -1;
             public int Up { get; set; } = -1;
             public int Dn { get; set; } = -1;
-            public Bitmap RezultBitMap { get; set; } 
+
+            public Bitmap BitMap { get; set; } 
+            public Bitmap RezultBitMap { get; set; }
+
+            public bool IsErr { get; set; } = false;
+            public string ErrText { get; set; } = string.Empty;
+
+            private bool SetErr(string err)
+            {
+                IsErr = true;
+                ErrText = err;
+                return false;
+            }
 
             public Scaner(int leftPoint, int rightPoint, int up, int dn)
             {
@@ -194,6 +190,24 @@ namespace CopyDel
                 Up = 0;
                 Dn = GetSystemMetrics(1);
             }
+            public Scaner(Bitmap bitmap, int leftPoint, int rightPoint, int up, int dn)
+            {
+                BitMap = bitmap;
+                LeftPoint = leftPoint;
+                RightPoint = rightPoint;
+                Up = up;
+                Dn = dn;
+                
+            }
+
+            public Scaner(Bitmap bitmap)
+            {
+                BitMap = bitmap;
+                LeftPoint = 0;
+                RightPoint = bitmap.Width-1;
+                Up = 0;
+                Dn = bitmap.Height-1;
+            }
             public void ChangeArea(int leftPoint, int rightPoint, int up, int dn)
             {
                 LeftPoint = leftPoint;
@@ -207,6 +221,16 @@ namespace CopyDel
                 RightPoint = GetSystemMetrics(0);
                 Up = 0;
                 Dn = GetSystemMetrics(1);
+            }
+
+            public bool StartScan()
+            {
+                List<RawColor> DnPointList = GetLine(EnumDirection.Dn);
+                List<RawColor> UpPointList = GetLine(EnumDirection.Up);
+                List<RawColor> LtPointList = GetLine(EnumDirection.Lt);
+                List<RawColor> RtPointList = GetLine(EnumDirection.Rt);
+
+                return true;
             }
 
             public int GetX() => (RightPoint + LeftPoint) / 2;
@@ -232,7 +256,7 @@ namespace CopyDel
                     var sdf = screenCapturer.Capture(CaptureMode.Screen);
                     if (sdf != null)
                     {
-                        Rectangle section = new Rectangle(new Point(0, 0), new Size(sdf.Width / 4, sdf.Height / 4));
+                        Rectangle section = new Rectangle(new Point(0, 0), new Size(sdf.Width / 3, sdf.Height / 3));
                         RezultBitMap =  CropImage(sdf, section);
                     }
                 }
@@ -268,43 +292,6 @@ namespace CopyDel
             }
         }
 
-        class ScreenCapturer
-        {
-            public Bitmap Capture(CaptureMode screenCaptureMode = CaptureMode.Window)
-            {
-                Rectangle bounds;
-
-                if (screenCaptureMode == CaptureMode.Screen)
-                {
-                    bounds = Screen.GetBounds(Point.Empty);
-                    CursorPosition = Cursor.Position;
-                }
-                else
-                {
-                    var handle = GetForegroundWindow();
-                    var rect = new Rect();
-                    GetWindowRect(handle, ref rect);
-
-                    bounds = new Rectangle(rect.Left, rect.Top, rect.Right, rect.Bottom);
-                    //CursorPosition = new Point(Cursor.Position.X - rect.Left, Cursor.Position.Y - rect.Top);
-                }
-
-                var result = new Bitmap(bounds.Width, bounds.Height);
-
-                using (var g = Graphics.FromImage(result))
-                {
-                    g.CopyFromScreen(new Point(bounds.Left, bounds.Top), Point.Empty, bounds.Size);
-                }
-
-                return result;
-            }
-
-            public Point CursorPosition
-            {
-                get;
-                protected set;
-            }
-        }
         private int FindDnPoint(IntPtr hdc, int X)
         {
             //string text = string.Empty;

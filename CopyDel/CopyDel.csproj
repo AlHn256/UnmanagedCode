@@ -44,10 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enum\CaptureMode.cs" />
+    <Compile Include="Enum\EnumDirection.cs" />
+    <Compile Include="Enum\MouseFlags.cs" />
     <Compile Include="Models\CopyList.cs" />
     <Compile Include="Models\DirInfo.cs" />
     <Compile Include="Models\FileEdit.cs" />
     <Compile Include="Models\FileList.cs" />
+    <Compile Include="Models\RawColor.cs" />
+    <Compile Include="Models\Scaner.cs" />
+    <Compile Include="Models\ScreenCapturer.cs" />
     <Compile Include="Models\TextEdit.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
