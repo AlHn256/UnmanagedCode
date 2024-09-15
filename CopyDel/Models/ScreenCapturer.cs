@@ -1,5 +1,7 @@
 ﻿using CopyDel.Enum;
+using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace CopyDel.Models
@@ -7,6 +9,18 @@ namespace CopyDel.Models
 
     public class ScreenCapturer
     {
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Rect
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetWindowRect(IntPtr hWnd, ref Rect rect);
         public Bitmap Capture(CaptureMode screenCaptureMode = CaptureMode.Window)
         {
             Rectangle bounds;

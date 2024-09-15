@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace CopyDel.Models
 {
-    public struct RawColor
+    public readonly struct RawColor
     {
         public readonly byte R, G, B;
         public RawColor(byte r, byte g, byte b)
@@ -25,6 +26,7 @@ namespace CopyDel.Models
             byte b = (byte)rand.Next(256);
             return new RawColor(r, g, b);
         }
+
         public override bool Equals(object obj)
         {
             // Check for null and type compatibility
