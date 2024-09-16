@@ -65,10 +65,10 @@ namespace UnmanagedCode
             Window wind = new Window();
             if (ChkBox.Checked)
             {
-                wind.LP = 63;
-                wind.RP = 548;
-                wind.Up = 15;
-                wind.Dn = 1030;
+                wind.LP = 84;
+                wind.RP = 839;
+                wind.Up = 126;
+                wind.Dn = 997;
             }
             else wind = FindWindow();
             

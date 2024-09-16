@@ -7,8 +7,8 @@ namespace UnmanagedCode.Models
     public class Window
     {
         public readonly RawColor MainWindowColor = new RawColor(31);
-        public readonly RawColor FieldColor = new RawColor(230,224,224);
-        public readonly RawColor FieldColor2 = new RawColor(229,224,224);
+        public readonly RawColor FieldColor3 = new RawColor(230,224,224);
+        public readonly RawColor FieldColor = new RawColor(229,224,224);
         public int LP { get; set; } = -1;
         public int RP { get; set; } = -1;
         public int Up { get; set; } = -1;
@@ -44,8 +44,8 @@ namespace UnmanagedCode.Models
 
         public bool FirstLineAnalys(List<RawColor> rawColor)
         {
-            bool firstCellisFind = false, isFind = false;
-            int findCounter = 0;
+            bool firstCellisFind = false, isFind = false, randisFind = false;
+            int findCounter = 0, randCounter = 0, findRand = -1;
             for (int i = 0; i < rawColor.Count; i++)
             {
                 if (rawColor[i].Equals(FieldColor)&& FirstCellUp==-1)
@@ -66,9 +66,25 @@ namespace UnmanagedCode.Models
                 if (FirstCellUp > 0 && rawColor[i].Equals(MainWindowColor)) isFind = true;
                 else isFind = false;
 
+
+                if (LastCellDn > 0 && rawColor[i].Equals(MainWindowColor) && findRand == -1)
+                {
+                    findRand = 0;
+                }
+                else if (findRand == 0 && !rawColor[i].Equals(MainWindowColor) && randCounter != 3)
+                {
+                    randCounter++;
+                }
+                else if (findRand == 0 && randCounter == 3) { MiddleRandomCellUp = Up + i - 1; findRand = 1; }
+                else if (MiddleRandomCellUp > 0 && findRand == 1 && rawColor[i].Equals(MainWindowColor)) 
+                { 
+                    MiddleRandomCellDn = Up + i - 2; findRand = 2;
+                    FirstRandomCellDn = MiddleRandomCellDn;
+                    LastRandomCellDn = MiddleRandomCellDn;
+                }
             }
 
-            if (LastCellDn > 0 && FirstCellUp > 0) return true;
+            if (LastCellDn > 0 && FirstCellUp > 0 && MiddleRandomCellUp > 0 && MiddleRandomCellDn > 0) return true;
             return false;
         }
     }
