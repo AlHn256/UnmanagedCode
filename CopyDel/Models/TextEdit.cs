@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CopyDel.Models
+namespace UnmanagedCode.Models
 {
     public static class StringExtension
     {

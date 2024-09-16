@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CopyDel.Enum
+namespace UnmanagedCode.Enum
 {//для удобства использования создаем перечисление с необходимыми флагами (константами), которые определяют действия мыши: 
     [Flags]
     enum MouseFlags

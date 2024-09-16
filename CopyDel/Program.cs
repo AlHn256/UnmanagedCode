@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace CopyDel
+namespace UnmanagedCode
 {
     static class Program
     {

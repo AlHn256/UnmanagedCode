@@ -1,4 +1,4 @@
-﻿namespace CopyDel.Enum
+﻿namespace UnmanagedCode.Enum
 {
     public enum EnumDirection
     {

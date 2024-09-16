@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace CopyDel.Models
+namespace UnmanagedCode.Models
 {
     public class Window
     {
         public readonly RawColor MainWindowColor = new RawColor(31);
-        public readonly RawColor FieldColor = new RawColor(229,224,224);
+        public readonly RawColor FieldColor = new RawColor(230,224,224);
+        public readonly RawColor FieldColor2 = new RawColor(229,224,224);
         public int LP { get; set; } = -1;
         public int RP { get; set; } = -1;
         public int Up { get; set; } = -1;

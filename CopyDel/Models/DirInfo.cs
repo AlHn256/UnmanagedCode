@@ -1,4 +1,4 @@
-﻿namespace CopyDel.Models
+﻿namespace UnmanagedCode.Models
 {
     internal class DirInfo
     {

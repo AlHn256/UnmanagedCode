@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
-namespace CopyDel.Models
+namespace UnmanagedCode.Models
 {
     public class FileList
     {

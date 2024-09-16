@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.IO;
 
 
-namespace CopyDel.Models
+namespace UnmanagedCode.Models
 {
     class FileEdit
     {

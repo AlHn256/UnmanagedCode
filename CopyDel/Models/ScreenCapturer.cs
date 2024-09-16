@@ -1,10 +1,10 @@
-﻿using CopyDel.Enum;
+﻿using UnmanagedCode.Enum;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace CopyDel.Models
+namespace UnmanagedCode.Models
 {
 
     public class ScreenCapturer

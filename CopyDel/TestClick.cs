@@ -1,5 +1,5 @@
-﻿using CopyDel.Enum;
-using CopyDel.Models;
+﻿using UnmanagedCode.Enum;
+using UnmanagedCode.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 //https://habr.com/ru/articles/316012/
-namespace CopyDel
+namespace UnmanagedCode
 {
     public partial class TestClick : Form
     {
@@ -63,23 +63,26 @@ namespace CopyDel
         private void TestBtn2_Click(object sender, EventArgs e)
         {
             Window wind = new Window();
-            if (!ChkBox.Checked)wind = FindWindow();
-            else
+            if (ChkBox.Checked)
             {
-                wind.LP = 78;
-                wind.RP = 821;
-                wind.Up = 135;
-                wind.Dn = 1006;
+                wind.LP = 63;
+                wind.RP = 548;
+                wind.Up = 15;
+                wind.Dn = 1030;
             }
+            else wind = FindWindow();
+            
             Scaner scaner = new Scaner(wind);
-
             Scaner scaner2 = new Scaner(scaner.RezultBitMap);
             var rawColor = scaner2.GetLine(EnumDirection.Dn);
 
             if (rawColor.Count != 0)
             {
-                var sdf = wind.FirstLineAnalys(rawColor);
-
+                if (!wind.FirstLineAnalys(rawColor))
+                {
+                    picBox.Image = scaner.RezultBitMap;
+                    return;
+                }
 
                 Bitmap myBitmap = new Bitmap(picBox.Width, picBox.Height, PixelFormat.Format32bppArgb);
                 int to = rawColor.Count > picBox.Height ? picBox.Height - 1 : rawColor.Count;
@@ -106,7 +109,6 @@ namespace CopyDel
                 }
                 picBox.Image = myBitmap;
             }
-
 
             //picBox.Image = null;
             //picBox.BackColor = Color.Black;

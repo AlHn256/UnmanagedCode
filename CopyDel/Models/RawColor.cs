@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace CopyDel.Models
+namespace UnmanagedCode.Models
 {
     public readonly struct RawColor
     {

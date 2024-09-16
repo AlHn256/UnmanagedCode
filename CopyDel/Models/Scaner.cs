@@ -1,10 +1,8 @@
-﻿using CopyDel.Enum;
-using System;
+﻿using UnmanagedCode.Enum;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Security.Principal;
 
-namespace CopyDel.Models
+namespace UnmanagedCode.Models
 {
     public class Scaner
     {
