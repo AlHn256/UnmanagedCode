@@ -65,10 +65,10 @@ namespace UnmanagedCode
             Window wind = new Window();
             if (ChkBox.Checked)
             {
-                wind.LP = 84;
-                wind.RP = 839;
-                wind.Up = 126;
-                wind.Dn = 997;
+                wind.Dn = 980;
+                wind.LP = 96;
+                wind.RP = 644;
+                wind.Up = 28;
             }
             else wind = FindWindow();
             
@@ -94,7 +94,7 @@ namespace UnmanagedCode
                 }
                 picBox.Image = myBitmap;
             }
-            else
+            else if(scaner2.RezultBitMap!=null)
             {
                 // picBox.Image = scaner.RezultBitMap;
                 var img = scaner2.RezultBitMap;
@@ -349,6 +349,15 @@ namespace UnmanagedCode
             picBox.Image = myBitmap;
            
             return point;
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Scaner scaner = new Scaner();
+            Bitmap source = scaner.GetScrin();
+            var area = new Rectangle(new Point(0, 0), new Size(source.Width / 2, source.Height));
+            Scaner.Screen = scaner.CropImage(source, area);
+            picBox.Image = Scaner.Screen;
         }
     }
 }

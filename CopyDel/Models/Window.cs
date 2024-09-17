@@ -24,8 +24,6 @@ namespace UnmanagedCode.Models
         public int LastCellUp { get; set; } = -1;
         public int LastCellDn { get; set; } = -1;
 
-
-
         public int FirstRandomCellLP { get; set; } = -1;
         public int FirstRandomCellRP { get; set; } = -1;
         public int FirstRandomCellUp { get; set; } = -1;
@@ -65,7 +63,6 @@ namespace UnmanagedCode.Models
 
                 if (FirstCellUp > 0 && rawColor[i].Equals(MainWindowColor)) isFind = true;
                 else isFind = false;
-
 
                 if (LastCellDn > 0 && rawColor[i].Equals(MainWindowColor) && findRand == -1)
                 {

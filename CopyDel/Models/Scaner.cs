@@ -23,6 +23,10 @@ namespace UnmanagedCode.Models
             return false;
         }
 
+        public Scaner()
+        {
+
+        }
         public Scaner(Window window)
         {
             LeftPoint = window.LP;
@@ -50,7 +54,6 @@ namespace UnmanagedCode.Models
             Dn = dn;
             if (Screen == null) GetScrin();
         }
-
         public Scaner(Bitmap bitmap)
         {
             if (bitmap == null)
