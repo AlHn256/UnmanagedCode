@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace UnmanagedCode.Models
 {
     public class Window
     {
         public readonly RawColor MainWindowColor = new RawColor(31);
-        public readonly RawColor FieldColor3 = new RawColor(230,224,224);
-        public readonly RawColor FieldColor = new RawColor(229,224,224);
+        public readonly RawColor FieldColor1 = new RawColor(229,224,224);
+        public readonly RawColor FieldColor2 = new RawColor(230, 224, 224);
         public int LP { get; set; } = -1;
         public int RP { get; set; } = -1;
         public int Up { get; set; } = -1;
@@ -39,14 +40,14 @@ namespace UnmanagedCode.Models
         public int LastRandomCellUp { get; set; } = -1;
         public int LastRandomCellDn { get; set; } = -1;
 
-
         public bool FirstLineAnalys(List<RawColor> rawColor)
         {
             bool firstCellisFind = false, isFind = false, randisFind = false;
             int findCounter = 0, randCounter = 0, findRand = -1;
+            RawColor fieldColor = FindeFieldColor(rawColor);
             for (int i = 0; i < rawColor.Count; i++)
             {
-                if (rawColor[i].Equals(FieldColor)&& FirstCellUp==-1)
+                if (rawColor[i].Equals(fieldColor)&& FirstCellUp==-1)
                 {
                     firstCellisFind = true;
                 }
@@ -83,6 +84,11 @@ namespace UnmanagedCode.Models
 
             if (LastCellDn > 0 && FirstCellUp > 0 && MiddleRandomCellUp > 0 && MiddleRandomCellDn > 0) return true;
             return false;
+        }
+
+        private RawColor FindeFieldColor(List<RawColor> rawColor)
+        {
+            return rawColor.Any(x => x.Equals(FieldColor1)) ? FieldColor1 : FieldColor2;
         }
     }
 }

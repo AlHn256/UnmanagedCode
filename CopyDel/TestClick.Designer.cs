@@ -37,6 +37,7 @@ namespace UnmanagedCode
             this.ChkBox = new System.Windows.Forms.CheckBox();
             this.picBox = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,9 +54,9 @@ namespace UnmanagedCode
             // 
             // TestBtn2
             // 
-            this.TestBtn2.Location = new System.Drawing.Point(11, 10);
+            this.TestBtn2.Location = new System.Drawing.Point(106, 10);
             this.TestBtn2.Name = "TestBtn2";
-            this.TestBtn2.Size = new System.Drawing.Size(82, 23);
+            this.TestBtn2.Size = new System.Drawing.Size(56, 23);
             this.TestBtn2.TabIndex = 32;
             this.TestBtn2.Text = "Scan";
             this.TestBtn2.UseVisualStyleBackColor = true;
@@ -64,7 +65,7 @@ namespace UnmanagedCode
             // ChkBox
             // 
             this.ChkBox.AutoSize = true;
-            this.ChkBox.Location = new System.Drawing.Point(99, 13);
+            this.ChkBox.Location = new System.Drawing.Point(12, 14);
             this.ChkBox.Name = "ChkBox";
             this.ChkBox.Size = new System.Drawing.Size(88, 17);
             this.ChkBox.TabIndex = 42;
@@ -85,7 +86,7 @@ namespace UnmanagedCode
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(742, 10);
+            this.button1.Location = new System.Drawing.Point(673, 10);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(63, 23);
             this.button1.TabIndex = 45;
@@ -93,11 +94,22 @@ namespace UnmanagedCode
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // button2
+            // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.Location = new System.Drawing.Point(742, 10);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(63, 23);
+            this.button2.TabIndex = 46;
+            this.button2.Text = "Get Scrin";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
             // TestClick
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(905, 1061);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.picBox);
             this.Controls.Add(this.ChkBox);
@@ -118,5 +130,6 @@ namespace UnmanagedCode
         private CheckBox ChkBox;
         private PictureBox picBox;
         private Button button1;
+        private Button button2;
     }
 }
