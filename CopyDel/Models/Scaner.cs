@@ -1,6 +1,7 @@
 ﻿using UnmanagedCode.Enum;
 using System.Collections.Generic;
 using System.Drawing;
+using System;
 
 namespace UnmanagedCode.Models
 {
@@ -171,6 +172,13 @@ namespace UnmanagedCode.Models
                 g.DrawImage(source, 0, 0, section, GraphicsUnit.Pixel);
                 return bitmap;
             }
+        }
+
+        internal RawColor GetPixel(int v1, int v2)
+        {
+            GetScrin();
+            var pixel = Screen.GetPixel(v1, v2);
+            return new RawColor(pixel.R, pixel.G, pixel.B);
         }
     }
 }

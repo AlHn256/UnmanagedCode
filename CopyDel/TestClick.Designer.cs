@@ -37,7 +37,12 @@ namespace UnmanagedCode
             this.ChkBox = new System.Windows.Forms.CheckBox();
             this.picBox = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.DelScrin = new System.Windows.Forms.Button();
+            this.TestBtn = new System.Windows.Forms.Button();
+            this.GetPixelBtn = new System.Windows.Forms.Button();
+            this.XTxtBox = new System.Windows.Forms.TextBox();
+            this.YTxtBox = new System.Windows.Forms.TextBox();
+            this.LbTxt = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -86,30 +91,80 @@ namespace UnmanagedCode
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(673, 10);
+            this.button1.Location = new System.Drawing.Point(697, 10);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(63, 23);
+            this.button1.Size = new System.Drawing.Size(39, 23);
             this.button1.TabIndex = 45;
-            this.button1.Text = "Get Scrin";
+            this.button1.Text = "Get";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
-            // button2
+            // DelScrin
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(742, 10);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(63, 23);
-            this.button2.TabIndex = 46;
-            this.button2.Text = "Get Scrin";
-            this.button2.UseVisualStyleBackColor = true;
+            this.DelScrin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.DelScrin.Location = new System.Drawing.Point(742, 10);
+            this.DelScrin.Name = "DelScrin";
+            this.DelScrin.Size = new System.Drawing.Size(63, 23);
+            this.DelScrin.TabIndex = 46;
+            this.DelScrin.Text = "Del Scrin";
+            this.DelScrin.UseVisualStyleBackColor = true;
+            this.DelScrin.Click += new System.EventHandler(this.DelScrin_Click);
+            // 
+            // TestBtn
+            // 
+            this.TestBtn.Location = new System.Drawing.Point(168, 10);
+            this.TestBtn.Name = "TestBtn";
+            this.TestBtn.Size = new System.Drawing.Size(56, 23);
+            this.TestBtn.TabIndex = 47;
+            this.TestBtn.Text = "Test";
+            this.TestBtn.UseVisualStyleBackColor = true;
+            this.TestBtn.Click += new System.EventHandler(this.TestBtn_Click);
+            // 
+            // GetPixelBtn
+            // 
+            this.GetPixelBtn.Location = new System.Drawing.Point(629, 10);
+            this.GetPixelBtn.Name = "GetPixelBtn";
+            this.GetPixelBtn.Size = new System.Drawing.Size(62, 23);
+            this.GetPixelBtn.TabIndex = 48;
+            this.GetPixelBtn.Text = "Get Pixel";
+            this.GetPixelBtn.UseVisualStyleBackColor = true;
+            this.GetPixelBtn.Click += new System.EventHandler(this.GetPixelBtn_Click);
+            // 
+            // XTxtBox
+            // 
+            this.XTxtBox.Location = new System.Drawing.Point(535, 11);
+            this.XTxtBox.Name = "XTxtBox";
+            this.XTxtBox.Size = new System.Drawing.Size(41, 20);
+            this.XTxtBox.TabIndex = 49;
+            this.XTxtBox.Text = "0";
+            // 
+            // YTxtBox
+            // 
+            this.YTxtBox.Location = new System.Drawing.Point(582, 11);
+            this.YTxtBox.Name = "YTxtBox";
+            this.YTxtBox.Size = new System.Drawing.Size(41, 20);
+            this.YTxtBox.TabIndex = 50;
+            this.YTxtBox.Text = "0";
+            // 
+            // LbTxt
+            // 
+            this.LbTxt.AutoSize = true;
+            this.LbTxt.Location = new System.Drawing.Point(416, 15);
+            this.LbTxt.Name = "LbTxt";
+            this.LbTxt.Size = new System.Drawing.Size(0, 13);
+            this.LbTxt.TabIndex = 51;
             // 
             // TestClick
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(905, 1061);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.LbTxt);
+            this.Controls.Add(this.YTxtBox);
+            this.Controls.Add(this.XTxtBox);
+            this.Controls.Add(this.GetPixelBtn);
+            this.Controls.Add(this.TestBtn);
+            this.Controls.Add(this.DelScrin);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.picBox);
             this.Controls.Add(this.ChkBox);
@@ -130,6 +185,11 @@ namespace UnmanagedCode
         private CheckBox ChkBox;
         private PictureBox picBox;
         private Button button1;
-        private Button button2;
+        private Button DelScrin;
+        private Button TestBtn;
+        private Button GetPixelBtn;
+        private TextBox XTxtBox;
+        private TextBox YTxtBox;
+        private Label LbTxt;
     }
 }

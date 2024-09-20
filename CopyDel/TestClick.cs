@@ -359,5 +359,27 @@ namespace UnmanagedCode
             Scaner.Screen = scaner.CropImage(source, area);
             picBox.Image = Scaner.Screen;
         }
+
+        private void DelScrin_Click(object sender, EventArgs e)
+        {
+            Scaner.Screen.Dispose();
+            picBox.Image = null;
+        }
+
+        private void GetPixelBtn_Click(object sender, EventArgs e)
+        {
+            int x = 0,y=0;
+            Int32.TryParse(XTxtBox.Text, out x);
+            Int32.TryParse(YTxtBox.Text,out y);
+            
+            Scaner scaner = new Scaner();
+            RawColor rawColor =  scaner.GetPixel(x,y);
+            LbTxt.Text = rawColor.R+" "+ rawColor.G + " "+ rawColor.B;
+        }
+
+        private void TestBtn_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
