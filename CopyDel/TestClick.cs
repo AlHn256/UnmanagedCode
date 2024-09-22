@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 //https://habr.com/ru/articles/316012/
 namespace UnmanagedCode
 {
@@ -36,10 +37,28 @@ namespace UnmanagedCode
             SCREENX = GetSystemMetrics(0);
             SCREENY = GetSystemMetrics(1);
         }
+
+        int N = 15000;
+
         private void TestBtn1_Click(object sender, EventArgs e)
+        {
+            N = 15000;
+            int D = 4500;
+            for (int i = 0; i < 5; i++)
+            {
+                Moov().Wait();
+                N -= D;
+            }
+        }
+
+        async Task<bool> Moov()
         {
             // Получаем разрешение экрана
             GetRezolution();
+            int xfr = (wind.LP + wind.RP) / 2;
+            int yfr = (wind.MiddleRandomCellDn + wind.MiddleRandomCellUp) / 2;
+            int xto = (wind.LP + wind.RP) / 2;
+            int yto = (wind.FirstCellUp + wind.LastCellDn) / 2;
 
             double dx = 65536 / (double)SCREENX;
             double dy = 65536 / (double)SCREENY;
@@ -49,26 +68,39 @@ namespace UnmanagedCode
             const int x = 32000;
             const int y = 32000;
 
-            Cursor.Position = new Point(x, y);
+            int Xfr = (int)(xfr * dx), Xto = Xfr;
+            int Yfr = (int)(yfr * dy), Yto = (int)(yto * dy) - N;
+
+            Cursor.Position = new Point(Xfr, Yfr);
+            mouse_event(MouseFlags.Absolute | MouseFlags.Move, Xfr, Yfr, 0, UIntPtr.Zero);
+            mouse_event(MouseFlags.Absolute | MouseFlags.LeftDown, Xfr, Yfr, 0, UIntPtr.Zero);
+            Thread.Sleep(200);
+
+            for (int i = Yfr; i > Yto; i -= 1000)
+            {
+                mouse_event(MouseFlags.Absolute | MouseFlags.Move, Xfr, i, 0, UIntPtr.Zero);
+                Thread.Sleep(20);
+            }
+
+            mouse_event(MouseFlags.Absolute | MouseFlags.Move, Xto, Yto, 0, UIntPtr.Zero);
+            mouse_event(MouseFlags.Absolute | MouseFlags.LeftUp, Xto, Yto, 0, UIntPtr.Zero);
             Thread.Sleep(500);
-            mouse_event(MouseFlags.Absolute | MouseFlags.Move, x, y, 0, UIntPtr.Zero);
-            mouse_event(MouseFlags.Absolute | MouseFlags.LeftDown, x, y, 0, UIntPtr.Zero);
-            mouse_event(MouseFlags.Absolute | MouseFlags.Move, x + 20000, y + 1000, 0, UIntPtr.Zero);
-            mouse_event(MouseFlags.Absolute | MouseFlags.LeftUp, x, y, 0, UIntPtr.Zero);
-            mouse_event(MouseFlags.Absolute | MouseFlags.RightUp, x, y, 0, UIntPtr.Zero);
+            //mouse_event(MouseFlags.Absolute | MouseFlags.RightUp, x, y, 0, UIntPtr.Zero);
+            return true;
         }
         private List<RawColor> RawColorList = new List<RawColor>();
 
         public RawColor WindowColor = new RawColor(31);
+        Window wind = new Window();
         private void TestBtn2_Click(object sender, EventArgs e)
         {
-            Window wind = new Window();
+            
             if (ChkBox.Checked)
             {
-                wind.Dn = 980;
-                wind.LP = 96;
-                wind.RP = 644;
-                wind.Up = 28;
+                wind.Dn = 1005;
+                wind.LP = 85;
+                wind.RP = 709;
+                wind.Up = 134;
             }
             else wind = FindWindow();
             

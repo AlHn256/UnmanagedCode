@@ -75,6 +75,7 @@ namespace UnmanagedCode
             this.ChkBox.Size = new System.Drawing.Size(88, 17);
             this.ChkBox.TabIndex = 42;
             this.ChkBox.Text = "Load Params";
+            this.ChkBox.Checked = true;
             this.ChkBox.UseVisualStyleBackColor = true;
             // 
             // picBox
