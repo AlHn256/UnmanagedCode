@@ -385,7 +385,10 @@ namespace UnmanagedCode
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            picBox.Image = null;
+
             Scaner scaner = new Scaner();
+            //Scaner.Screen.Dispose();
             Bitmap source = scaner.GetScrin();
             var area = new Rectangle(new Point(0, 0), new Size(source.Width / 2, source.Height));
             Scaner.Screen = scaner.CropImage(source, area);

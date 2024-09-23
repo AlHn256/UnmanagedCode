@@ -163,9 +163,12 @@ namespace UnmanagedCode.Models
 
         public Bitmap CropImage() => 
             CropImage(Screen, new Rectangle (new Point (LeftPoint, Up), new Size(RightPoint - LeftPoint, Dn - Up)));
-        
         public Bitmap CropImage(Bitmap source, Rectangle section)
         {
+            if(source ==null) return null;
+            if(source.Width == 0 || source.Height == 0) return null;
+            if(source.Width < section.X + section.Width || source.Height < section.Y + section.Height) return null;
+
             var bitmap = new Bitmap(section.Width, section.Height);
             using (var g = Graphics.FromImage(bitmap))
             {
@@ -173,7 +176,6 @@ namespace UnmanagedCode.Models
                 return bitmap;
             }
         }
-
         internal RawColor GetPixel(int v1, int v2)
         {
             GetScrin();

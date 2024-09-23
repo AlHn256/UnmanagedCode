@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace UnmanagedCode.Models
@@ -19,6 +17,21 @@ namespace UnmanagedCode.Models
         public int FirstCellRP{ get; set; } = -1;
         public int FirstCellUp { get; set; } = -1;
         public int FirstCellDn { get; set; } = -1;
+
+        public int SecondCellLP { get; set; } = -1;
+        public int SecondCellRP { get; set; } = -1;
+        public int SecondCellUp { get; set; } = -1;
+        public int SecondCellDn { get; set; } = -1;
+
+        public int ThirdCellLP { get; set; } = -1;
+        public int ThirdCellRP { get; set; } = -1;
+        public int ThirdCellUp { get; set; } = -1;
+        public int ThirdCellDn { get; set; } = -1;
+
+        public int FourthCellLP { get; set; } = -1;
+        public int FourthCellRP { get; set; } = -1;
+        public int FourthCellUp { get; set; } = -1;
+        public int FourthCellDn { get; set; } = -1;
 
         public int LastCellLP { get; set; } = -1;
         public int LastCellRP{ get; set; } = -1;
@@ -43,39 +56,49 @@ namespace UnmanagedCode.Models
         public bool FirstLineAnalys(List<RawColor> rawColor)
         {
             bool firstCellisFind = false, isFind = false, randisFind = false;
-            int findCounter = 0, randCounter = 0, findRand = -1;
+            int findCounter = 0, randCounter = 0, findRand = -1, CellN = 0 ;
             RawColor fieldColor = FindeFieldColor(rawColor);
             for (int i = 0; i < rawColor.Count; i++)
             {
-                if (rawColor[i].Equals(fieldColor)&& FirstCellUp==-1)
+                if (rawColor[i].Equals(fieldColor))
                 {
-                    firstCellisFind = true;
-                }
-                else firstCellisFind = false;
+                    if (FirstCellUp == -1)firstCellisFind = true;
+                    else firstCellisFind = false;
 
-                if (firstCellisFind || isFind) findCounter++;
+                    if (CellN == 1 && FirstCellDn != -1 && SecondCellUp == -1) SecondCellUp = Up + i;
+                }
+                else if (FirstCellUp != -1 && LastCellDn == -1 && CellN > 0 && CellN < 5)
+                {
+                    if(CellN == 1 && FirstCellDn == -1) FirstCellDn = Up + i - 1;
+                }
+
+                if (firstCellisFind || isFind)findCounter++;
                 else findCounter = 0;
 
                 if (findCounter > 2)
                 {
                     if (FirstCellUp > 0) LastCellDn = Up + i - 1;
-                    else FirstCellUp = Up + i - 1;
+                    else
+                    {
+                        FirstCellUp = Up + i - 1;
+                        CellN = 1;
+                    }
                 }
 
                 if (FirstCellUp > 0 && rawColor[i].Equals(MainWindowColor)) isFind = true;
                 else isFind = false;
 
-                if (LastCellDn > 0 && rawColor[i].Equals(MainWindowColor) && findRand == -1)
+                if (LastCellDn > 0 && rawColor[i].Equals(MainWindowColor) && findRand == -1) findRand = 0;
+                else if (findRand == 0 && !rawColor[i].Equals(MainWindowColor) && randCounter != 3) randCounter++;
+                else if (findRand == 0 && randCounter == 3)
                 {
-                    findRand = 0;
+                    MiddleRandomCellUp = Up + i - 1;
+                    FirstRandomCellUp = MiddleRandomCellUp;
+                    LastRandomCellUp = MiddleRandomCellUp;
+                    findRand = 1;
                 }
-                else if (findRand == 0 && !rawColor[i].Equals(MainWindowColor) && randCounter != 3)
+                else if (MiddleRandomCellUp > 0 && findRand == 1 && rawColor[i].Equals(MainWindowColor))
                 {
-                    randCounter++;
-                }
-                else if (findRand == 0 && randCounter == 3) { MiddleRandomCellUp = Up + i - 1; findRand = 1; }
-                else if (MiddleRandomCellUp > 0 && findRand == 1 && rawColor[i].Equals(MainWindowColor)) 
-                { 
                     MiddleRandomCellDn = Up + i - 2; findRand = 2;
                     FirstRandomCellDn = MiddleRandomCellDn;
                     LastRandomCellDn = MiddleRandomCellDn;
