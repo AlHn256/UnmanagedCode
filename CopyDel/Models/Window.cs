@@ -65,11 +65,38 @@ namespace UnmanagedCode.Models
                     if (FirstCellUp == -1)firstCellisFind = true;
                     else firstCellisFind = false;
 
-                    if (CellN == 1 && FirstCellDn != -1 && SecondCellUp == -1) SecondCellUp = Up + i;
+                    if (CellN == 1 && FirstCellDn != -1 && SecondCellUp == -1)
+                    {
+                        SecondCellUp = Up + i;
+                        CellN++;
+                    }
+                    if (CellN == 2  && SecondCellUp != -1 && ThirdCellUp == -1 && SecondCellDn != -1)
+                    {
+                        ThirdCellUp = Up + i;
+                        CellN++;
+                    }
+                    if (CellN == 3  && ThirdCellUp != -1 && FourthCellUp == -1 && ThirdCellDn != -1)
+                    {
+                        FourthCellUp = Up + i;
+                        CellN++;
+                    }
+                    if (CellN == 4  && LastCellUp == -1 && FourthCellUp != -1 && LastCellDn == -1)
+                    {
+                        LastCellUp = Up + i;
+                        CellN++;
+                    }
                 }
-                else if (FirstCellUp != -1 && LastCellDn == -1 && CellN > 0 && CellN < 5)
+                else if (LastCellDn == -1 && CellN > 0 && CellN < 6)
                 {
-                    if(CellN == 1 && FirstCellDn == -1) FirstCellDn = Up + i - 1;
+                    if (CellN == 1 && FirstCellDn == -1) FirstCellDn = Up + i - 1;
+                    if (CellN == 2 && SecondCellDn == -1) SecondCellDn = Up + i - 1;
+                    if (CellN == 3 && ThirdCellDn == -1) ThirdCellDn = Up + i - 1;
+                    if (CellN == 4 && FourthCellDn == -1)FourthCellDn = Up + i - 1;
+                    if (CellN == 5 && LastCellDn == -1)
+                    {
+                        LastCellDn = Up + i - 1;
+                    }
+                    
                 }
 
                 if (firstCellisFind || isFind)findCounter++;
@@ -77,7 +104,10 @@ namespace UnmanagedCode.Models
 
                 if (findCounter > 2)
                 {
-                    if (FirstCellUp > 0) LastCellDn = Up + i - 1;
+                    if (FirstCellUp > 0)
+                    {
+                        //LastCellDn = Up + i - 1;
+                    }
                     else
                     {
                         FirstCellUp = Up + i - 1;

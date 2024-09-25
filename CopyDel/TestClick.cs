@@ -97,10 +97,10 @@ namespace UnmanagedCode
             
             if (ChkBox.Checked)
             {
-                wind.Dn = 1005;
-                wind.LP = 85;
-                wind.RP = 709;
-                wind.Up = 134;
+                wind.Dn = 1001;
+                wind.LP = 84;
+                wind.RP = 706;
+                wind.Up = 256;
             }
             else wind = FindWindow();
             
