@@ -94,7 +94,7 @@ namespace UnmanagedCode
         Window wind = new Window();
         private void TestBtn2_Click(object sender, EventArgs e)
         {
-            
+
             if (ChkBox.Checked)
             {
                 wind.Dn = 1001;
@@ -103,49 +103,51 @@ namespace UnmanagedCode
                 wind.Up = 256;
             }
             else wind = FindWindow();
-            
+
             Scaner scaner = new Scaner(wind);
             Scaner scaner2 = new Scaner(scaner.RezultBitMap);
             var rawColor = scaner2.GetLine(EnumDirection.Dn);
 
-            if (rawColor.Count != 0)
+            if (rawColor.Count == 0)
             {
-                if (!wind.FirstLineAnalys(rawColor))
+                if (scaner2.RezultBitMap != null)
                 {
-                    picBox.Image = scaner.RezultBitMap;
-                    return;
+                    // picBox.Image = scaner.RezultBitMap;
+                    var img = scaner2.RezultBitMap;
+                    picBox.BackColor = Color.White;
+                    Bitmap myBitmap2 = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
+                    for (int i = 0; i < img.Height - 1; i++)
+                    {
+                        Color color = img.GetPixel(img.Height / 2, i);
+                        myBitmap2.SetPixel(picBox.Width / 2 - 1, i, Color.FromArgb(color.A, color.R, color.G, color.B));
+                        myBitmap2.SetPixel(picBox.Width / 2, i, Color.FromArgb(250, color.R, color.G, color.B));
+                        myBitmap2.SetPixel(picBox.Width / 2 + 1, i, Color.FromArgb(250, color.R, color.G, color.B));
+                    }
+                    picBox.Image = myBitmap2;
                 }
+            }
 
-                Bitmap myBitmap = new Bitmap(picBox.Width, picBox.Height, PixelFormat.Format32bppArgb);
-                int to = rawColor.Count > picBox.Height ? picBox.Height - 1 : rawColor.Count;
-                for (int i = 0; i < to; i++)
-                {
-                    myBitmap.SetPixel(picBox.Width / 2 - 1, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
-                    myBitmap.SetPixel(picBox.Width / 2, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
-                    myBitmap.SetPixel(picBox.Width / 2 + 1, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
-                }
-                picBox.Image = myBitmap;
-            }
-            else if(scaner2.RezultBitMap!=null)
+            if (!wind.FirstLineAnalys(rawColor))
             {
-                // picBox.Image = scaner.RezultBitMap;
-                var img = scaner2.RezultBitMap;
-                picBox.BackColor = Color.White;
-                Bitmap myBitmap = new Bitmap(img.Width, img.Height, PixelFormat.Format32bppArgb);
-                for (int i = 0; i < img.Height - 1; i++)
-                {
-                    Color color = img.GetPixel(img.Height / 2, i);
-                    myBitmap.SetPixel(picBox.Width / 2 - 1, i, Color.FromArgb(color.A, color.R, color.G, color.B));
-                    myBitmap.SetPixel(picBox.Width / 2, i, Color.FromArgb(250, color.R, color.G, color.B));
-                    myBitmap.SetPixel(picBox.Width / 2 + 1, i, Color.FromArgb(250, color.R, color.G, color.B));
-                }
-                picBox.Image = myBitmap;
+                picBox.Image = scaner.RezultBitMap;
+                return;
             }
+
+            Bitmap myBitmap = new Bitmap(picBox.Width, picBox.Height, PixelFormat.Format32bppArgb);
+            int to = rawColor.Count > picBox.Height ? picBox.Height - 1 : rawColor.Count;
+            for (int i = 0; i < to; i++)
+            {
+                myBitmap.SetPixel(picBox.Width / 2 - 1, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
+                myBitmap.SetPixel(picBox.Width / 2, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
+                myBitmap.SetPixel(picBox.Width / 2 + 1, i, Color.FromArgb(250, rawColor[i].R, rawColor[i].G, rawColor[i].B));
+            }
+            picBox.Image = myBitmap;
 
             //picBox.Image = null;
             //picBox.BackColor = Color.Black;
             //picBox.Image = scaner.RezultBitMap;
         }
+
         private Window FindWindow()
         {
             GetRezolution();
