@@ -81,7 +81,6 @@ namespace UnmanagedCode
                 mouse_event(MouseFlags.Absolute | MouseFlags.Move, Xfr, i, 0, UIntPtr.Zero);
                 Thread.Sleep(20);
             }
-
             mouse_event(MouseFlags.Absolute | MouseFlags.Move, Xto, Yto, 0, UIntPtr.Zero);
             mouse_event(MouseFlags.Absolute | MouseFlags.LeftUp, Xto, Yto, 0, UIntPtr.Zero);
             Thread.Sleep(500);
@@ -94,7 +93,6 @@ namespace UnmanagedCode
         Window wind = new Window();
         private void TestBtn2_Click(object sender, EventArgs e)
         {
-
             if (ChkBox.Checked)
             {
                 wind.Dn = 1001;

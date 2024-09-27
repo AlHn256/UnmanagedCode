@@ -133,8 +133,6 @@ namespace UnmanagedCode.Models
         public List<RawColor> GetLine(int fx, int fy, int tx, int ty)
         {
             List<RawColor> RawList = new List<RawColor>();
-
-
             if (true)
             {
                 Rectangle section = new Rectangle(new Point(0, 0), new Size(Screen.Width / 3, Screen.Height / 3));

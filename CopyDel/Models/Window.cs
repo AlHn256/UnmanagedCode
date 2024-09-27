@@ -188,6 +188,8 @@ namespace UnmanagedCode.Models
 
         public bool SecondLineAnalys(List<RawColor> rawColor)
         {
+
+
             return true;
         }
 
